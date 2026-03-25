@@ -1,0 +1,310 @@
+<div class="page">
+  <header class="header">
+    <h1 class="title">Meu currículo</h1>
+    <p class="subtitle">Preencha e envie para quem vai montar o CV</p>
+  </header>
+
+  <nav class="tabs" aria-label="Seções">
+    @for (t of tabs; track t.id) {
+      <button
+        type="button"
+        class="tab"
+        [class.tab--active]="activeTab() === t.id"
+        (click)="setTab(t.id)"
+      >
+        {{ t.label }}
+      </button>
+    }
+  </nav>
+
+  <main class="content">
+    @if (activeTab() === 'inicio') {
+      <section class="card">
+        <h2 class="card-title">Como usar</h2>
+        <p class="body">
+          1. Vá preenchendo cada aba: dados pessoais, objetivo, formação, experiência e extras.<br /><br />
+          2. Os dados ficam salvos automaticamente neste navegador.<br /><br />
+          3. Na aba Enviar, use Compartilhar ou Copiar para mandar tudo para quem vai fazer o currículo (por exemplo no
+          WhatsApp).
+        </p>
+        <button type="button" class="btn btn-secondary" (click)="setTab('pessoal')">Começar pelos dados pessoais</button>
+      </section>
+    }
+
+    @if (activeTab() === 'pessoal') {
+      <section class="card">
+        <h2 class="card-title">Dados pessoais</h2>
+        <label class="field">
+          <span class="label">Nome completo</span>
+          <input
+            class="input"
+            type="text"
+            [value]="storage.cv().personal.fullName"
+            (input)="patchPersonal({ fullName: val($event) })"
+            placeholder="Como quer no currículo"
+          />
+        </label>
+        <label class="field">
+          <span class="label">E-mail</span>
+          <input
+            class="input"
+            type="email"
+            [value]="storage.cv().personal.email"
+            (input)="patchPersonal({ email: val($event) })"
+            placeholder="seu@email.com"
+          />
+        </label>
+        <label class="field">
+          <span class="label">Telefone / WhatsApp</span>
+          <input
+            class="input"
+            type="tel"
+            [value]="storage.cv().personal.phone"
+            (input)="patchPersonal({ phone: val($event) })"
+            placeholder="(00) 00000-0000"
+          />
+        </label>
+        <label class="field">
+          <span class="label">Cidade / UF</span>
+          <input
+            class="input"
+            type="text"
+            [value]="storage.cv().personal.cityState"
+            (input)="patchPersonal({ cityState: val($event) })"
+            placeholder="Ex.: São Paulo — SP"
+          />
+        </label>
+        <label class="field">
+          <span class="label">LinkedIn (opcional)</span>
+          <input
+            class="input"
+            type="url"
+            [value]="storage.cv().personal.linkedin"
+            (input)="patchPersonal({ linkedin: val($event) })"
+            placeholder="URL do perfil"
+          />
+        </label>
+        <label class="field">
+          <span class="label">Portfólio ou site (opcional)</span>
+          <input
+            class="input"
+            type="url"
+            [value]="storage.cv().personal.portfolio"
+            (input)="patchPersonal({ portfolio: val($event) })"
+            placeholder="https://"
+          />
+        </label>
+      </section>
+    }
+
+    @if (activeTab() === 'objetivo') {
+      <section class="card">
+        <h2 class="card-title">Objetivo ou resumo</h2>
+        <p class="hint">O que você busca e/ou um parágrafo sobre sua trajetória.</p>
+        <label class="field">
+          <textarea
+            class="input input-multiline"
+            rows="6"
+            [value]="storage.cv().objective"
+            (input)="setObjective(val($event))"
+            placeholder="Ex.: Busco oportunidade como… Tenho X anos de experiência em…"
+          ></textarea>
+        </label>
+      </section>
+    }
+
+    @if (activeTab() === 'formacao') {
+      <section class="card">
+        <h2 class="card-title">Formação acadêmica</h2>
+        <p class="hint">Adicione cada curso ou nível de ensino.</p>
+        @for (ed of storage.cv().education; track ed.id; let i = $index) {
+          <div class="sub-card">
+            <div class="sub-card-head">
+              <span class="sub-card-title">Formação {{ i + 1 }}</span>
+              <button type="button" class="link-danger" (click)="removeEducation(ed.id)">Remover</button>
+            </div>
+            <label class="field">
+              <span class="label">Instituição</span>
+              <input
+                class="input"
+                type="text"
+                [value]="ed.institution"
+                (input)="patchEd(ed.id, { institution: val($event) })"
+                placeholder="Nome da escola/faculdade"
+              />
+            </label>
+            <label class="field">
+              <span class="label">Curso</span>
+              <input class="input" type="text" [value]="ed.course" (input)="patchEd(ed.id, { course: val($event) })" />
+            </label>
+            <label class="field">
+              <span class="label">Grau (Ex.: Técnico, Superior, Mestrado)</span>
+              <input class="input" type="text" [value]="ed.degree" (input)="patchEd(ed.id, { degree: val($event) })" />
+            </label>
+            <div class="row2">
+              <label class="field row2-item">
+                <span class="label">Início (ano)</span>
+                <input
+                  class="input"
+                  type="text"
+                  [value]="ed.startYear"
+                  (input)="patchEd(ed.id, { startYear: val($event) })"
+                  placeholder="2018"
+                />
+              </label>
+              <label class="field row2-item">
+                <span class="label">Fim (ano)</span>
+                <input
+                  class="input"
+                  type="text"
+                  [value]="ed.endYear"
+                  (input)="patchEd(ed.id, { endYear: val($event) })"
+                  placeholder="2022"
+                />
+              </label>
+            </div>
+            <label class="field">
+              <span class="label">Situação (Ex.: Completo, Cursando)</span>
+              <input class="input" type="text" [value]="ed.status" (input)="patchEd(ed.id, { status: val($event) })" />
+            </label>
+          </div>
+        }
+        <button type="button" class="btn btn-secondary" (click)="addEducation()">+ Adicionar formação</button>
+      </section>
+    }
+
+    @if (activeTab() === 'experiencia') {
+      <section class="card">
+        <h2 class="card-title">Experiência profissional</h2>
+        <p class="hint">Do mais recente para o mais antigo, se possível.</p>
+        @for (ex of storage.cv().experience; track ex.id; let i = $index) {
+          <div class="sub-card">
+            <div class="sub-card-head">
+              <span class="sub-card-title">Experiência {{ i + 1 }}</span>
+              <button type="button" class="link-danger" (click)="removeExperience(ex.id)">Remover</button>
+            </div>
+            <label class="field">
+              <span class="label">Empresa</span>
+              <input
+                class="input"
+                type="text"
+                [value]="ex.company"
+                (input)="patchEx(ex.id, { company: val($event) })"
+              />
+            </label>
+            <label class="field">
+              <span class="label">Cargo</span>
+              <input class="input" type="text" [value]="ex.role" (input)="patchEx(ex.id, { role: val($event) })" />
+            </label>
+            <label class="field row-switch">
+              <span class="label">Trabalho atual</span>
+              <input
+                type="checkbox"
+                [checked]="ex.current"
+                (change)="patchEx(ex.id, { current: checked($event), endDate: checked($event) ? '' : ex.endDate })"
+              />
+            </label>
+            <div class="row2">
+              <label class="field row2-item">
+                <span class="label">Início</span>
+                <input
+                  class="input"
+                  type="text"
+                  [value]="ex.startDate"
+                  (input)="patchEx(ex.id, { startDate: val($event) })"
+                  placeholder="mm/aaaa ou ano"
+                />
+              </label>
+              @if (!ex.current) {
+                <label class="field row2-item">
+                  <span class="label">Fim</span>
+                  <input
+                    class="input"
+                    type="text"
+                    [value]="ex.endDate"
+                    (input)="patchEx(ex.id, { endDate: val($event) })"
+                    placeholder="mm/aaaa ou ano"
+                  />
+                </label>
+              }
+            </div>
+            <label class="field">
+              <span class="label">Atividades e conquistas</span>
+              <textarea
+                class="input input-multiline"
+                rows="5"
+                [value]="ex.description"
+                (input)="patchEx(ex.id, { description: val($event) })"
+                placeholder="Liste responsabilidades e resultados quando possível."
+              ></textarea>
+            </label>
+          </div>
+        }
+        <button type="button" class="btn btn-secondary" (click)="addExperience()">+ Adicionar experiência</button>
+      </section>
+    }
+
+    @if (activeTab() === 'complementos') {
+      <section class="card">
+        <h2 class="card-title">Habilidades, idiomas e outros</h2>
+        <p class="hint">Um item por linha ou separado por vírgula — como preferir.</p>
+        <label class="field">
+          <span class="label">Habilidades / competências</span>
+          <textarea
+            class="input input-multiline"
+            rows="4"
+            [value]="storage.cv().skills"
+            (input)="setSkills(val($event))"
+            placeholder="Ex.: Excel avançado, atendimento ao cliente, Python…"
+          ></textarea>
+        </label>
+        <label class="field">
+          <span class="label">Idiomas</span>
+          <textarea
+            class="input input-multiline"
+            rows="3"
+            [value]="storage.cv().languages"
+            (input)="setLanguages(val($event))"
+            placeholder="Ex.: Inglês — intermediário"
+          ></textarea>
+        </label>
+        <label class="field">
+          <span class="label">Cursos e treinamentos</span>
+          <textarea
+            class="input input-multiline"
+            rows="4"
+            [value]="storage.cv().courses"
+            (input)="setCourses(val($event))"
+          ></textarea>
+        </label>
+        <label class="field">
+          <span class="label">Certificações</span>
+          <textarea
+            class="input input-multiline"
+            rows="3"
+            [value]="storage.cv().certifications"
+            (input)="setCertifications(val($event))"
+          ></textarea>
+        </label>
+      </section>
+    }
+
+    @if (activeTab() === 'enviar') {
+      <section class="card">
+        <h2 class="card-title">Enviar dados</h2>
+        <p class="body">
+          Use uma das opções abaixo para mandar as informações para quem vai montar o currículo (WhatsApp, e-mail, etc.).
+        </p>
+        <button type="button" class="btn btn-primary" (click)="shareText()">Compartilhar texto</button>
+        <button type="button" class="btn btn-secondary btn-spaced" (click)="copyText()">Copiar texto formatado</button>
+        <button type="button" class="btn btn-secondary btn-spaced" (click)="copyJson()">Copiar JSON (avançado)</button>
+        <hr class="divider" />
+        <p class="preview-label">Pré-visualização</p>
+        <pre class="preview-box" tabindex="0">{{ textExport() || '(Preencha as abas anteriores — o texto aparecerá aqui.)' }}</pre>
+        <button type="button" class="btn btn-danger btn-spaced" (click)="confirmReset()">Limpar todos os dados</button>
+      </section>
+    }
+
+    <div class="footer-spacer" aria-hidden="true"></div>
+  </main>
+</div>
