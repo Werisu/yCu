@@ -113,6 +113,8 @@ export class CvStorageService {
       }
       this.remoteUserId = auth.userId;
 
+      await this.remoteRepo.registerServiceUser();
+
       const row = await this.remoteRepo.fetchCv(auth.userId);
       if (row) {
         const serverMs = new Date(row.updatedAt).getTime();

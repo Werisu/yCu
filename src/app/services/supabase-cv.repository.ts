@@ -41,6 +41,29 @@ export class SupabaseCvRepository {
     return { status: 'ok', userId: data.user.id };
   }
 
+  /**
+   * Registra ou atualiza uso do serviço (first_seen / last_seen).
+   * Falhas são só logadas — não interrompem o fluxo do currículo.
+   */
+  async registerServiceUser(): Promise<void> {
+    const client = this.supabase.client;
+    if (!client) return;
+
+    const p_user_agent =
+      typeof navigator !== 'undefined' && navigator.userAgent ? navigator.userAgent : null;
+    const p_locale =
+      typeof navigator !== 'undefined' && navigator.language ? navigator.language : null;
+
+    const { error } = await client.rpc('register_service_user', {
+      p_user_agent,
+      p_locale,
+    });
+
+    if (error) {
+      console.warn('[yCu] Registro de usuário:', error.message);
+    }
+  }
+
   async fetchCv(userId: string): Promise<CvRemoteRow | null> {
     const client = this.supabase.client;
     if (!client) return null;
