@@ -8,7 +8,13 @@ import { SupabaseService } from './supabase.service';
 const STORAGE_KEY = 'ycu_cv_v1';
 const META_KEY = 'ycu_cv_v1_edited';
 
-export type RemoteSyncState = 'disabled' | 'connecting' | 'synced' | 'error';
+export type RemoteSyncState =
+  | 'disabled'
+  | 'connecting'
+  | 'synced'
+  | 'error'
+  /** Supabase: Authentication → Sign In / Providers → Anonymous → Enable */
+  | 'anon_disabled';
 
 @Injectable({ providedIn: 'root' })
 export class CvStorageService {
@@ -99,8 +105,10 @@ export class CvStorageService {
     this.remoteSyncState.set('connecting');
     try {
       const auth = await this.remoteRepo.ensureSession();
-      if (!auth) {
-        this.remoteSyncState.set('error');
+      if (auth.status === 'error') {
+        this.remoteSyncState.set(
+          auth.code === 'anonymous_provider_disabled' ? 'anon_disabled' : 'error',
+        );
         return;
       }
       this.remoteUserId = auth.userId;

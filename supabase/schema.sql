@@ -1,6 +1,9 @@
 -- yCu: tabela de currículo por usuário (auth.uid).
 -- Execute no SQL Editor do Supabase.
--- Pré-requisito: Authentication → Providers → ativar "Anonymous sign-ins".
+--
+-- OBRIGATÓRIO (senão a API retorna anonymous_provider_disabled):
+-- Dashboard → Authentication → (aba Sign In / Providers) → Anonymous → Enable.
+-- Em projetos novos o anonymous vem desligado por padrão.
 
 create table if not exists public.cv_data (
   user_id uuid primary key references auth.users (id) on delete cascade,

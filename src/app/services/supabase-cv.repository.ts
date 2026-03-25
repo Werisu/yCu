@@ -8,28 +8,37 @@ export interface CvRemoteRow {
   updatedAt: string;
 }
 
+export type EnsureSessionResult =
+  | { status: 'ok'; userId: string }
+  | { status: 'error'; code?: string; message?: string };
+
 @Injectable({ providedIn: 'root' })
 export class SupabaseCvRepository {
   constructor(private readonly supabase: SupabaseService) {}
 
   /** Garante sessão (inclui login anônimo se necessário). */
-  async ensureSession(): Promise<{ userId: string } | null> {
+  async ensureSession(): Promise<EnsureSessionResult> {
     const client = this.supabase.client;
-    if (!client) return null;
+    if (!client) {
+      return { status: 'error', code: 'no_client', message: 'Cliente Supabase não configurado' };
+    }
 
     const {
       data: { session },
     } = await client.auth.getSession();
     if (session?.user?.id) {
-      return { userId: session.user.id };
+      return { status: 'ok', userId: session.user.id };
     }
 
     const { data, error } = await client.auth.signInAnonymously();
-    if (error || !data.user?.id) {
-      console.error('[yCu] Supabase auth:', error?.message ?? 'sem usuário');
-      return null;
+    if (error) {
+      console.error('[yCu] Supabase auth:', error.message, error);
+      return { status: 'error', code: error.code, message: error.message };
     }
-    return { userId: data.user.id };
+    if (!data.user?.id) {
+      return { status: 'error', message: 'Resposta de auth sem usuário' };
+    }
+    return { status: 'ok', userId: data.user.id };
   }
 
   async fetchCv(userId: string): Promise<CvRemoteRow | null> {

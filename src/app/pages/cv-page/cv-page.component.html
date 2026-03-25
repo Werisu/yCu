@@ -31,6 +31,15 @@
               @case ('error') {
                 <span class="badge rounded-pill text-bg-danger fw-normal">Nuvem indisponível</span>
               }
+              @case ('anon_disabled') {
+                <span
+                  class="badge rounded-pill text-bg-warning text-dark fw-normal text-wrap text-start"
+                  style="max-width: 100%"
+                  title="Ative o login anônimo no painel do Supabase"
+                >
+                  Supabase: ative &quot;Anonymous sign-ins&quot; em Authentication → Sign In / Providers → Anonymous
+                </span>
+              }
             }
           </div>
         </div>
