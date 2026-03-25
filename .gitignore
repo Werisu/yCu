@@ -28,6 +28,9 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 
+# Gerado no build com segredos (Vercel / CI)
+/public/supabase-runtime-config.json
+
 # Miscellaneous
 /.angular/cache
 .sass-cache/

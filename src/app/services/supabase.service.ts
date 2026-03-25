@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { getSupabaseRuntimeConfig } from '../config/supabase-runtime';
 import { environment } from '../../environments/environment';
 
 /**
@@ -21,8 +22,9 @@ export class SupabaseService {
   readonly client: SupabaseClient | null;
 
   constructor() {
-    const url = environment.supabaseUrl?.trim();
-    const key = environment.supabaseAnonKey?.trim();
+    const rt = getSupabaseRuntimeConfig();
+    const url = (rt.url || environment.supabaseUrl || '').trim();
+    const key = (rt.key || environment.supabaseAnonKey || '').trim();
     if (url && key) {
       this.client = createClient(url, key, {
         auth: {
