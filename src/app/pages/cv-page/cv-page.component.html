@@ -15,6 +15,24 @@
           <p class="text-body-secondary small mb-0">
             Preencha e envie para quem vai montar o CV
           </p>
+          <div class="mt-2 d-flex flex-wrap gap-2 align-items-center" aria-live="polite">
+            @switch (storage.remoteSyncState()) {
+              @case ('disabled') {
+                <span class="badge rounded-pill text-bg-light border fw-normal">
+                  Nuvem: configure URL e chave em <code class="small">environment</code>
+                </span>
+              }
+              @case ('connecting') {
+                <span class="badge rounded-pill text-bg-primary fw-normal">Nuvem: sincronizando…</span>
+              }
+              @case ('synced') {
+                <span class="badge rounded-pill text-bg-success fw-normal">Backup na nuvem ativo</span>
+              }
+              @case ('error') {
+                <span class="badge rounded-pill text-bg-danger fw-normal">Nuvem indisponível</span>
+              }
+            }
+          </div>
         </div>
       </div>
     </div>
