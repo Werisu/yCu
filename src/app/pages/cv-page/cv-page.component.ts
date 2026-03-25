@@ -21,6 +21,7 @@ type TabId =
 })
 export class CvPageComponent {
   readonly storage = inject(CvStorageService);
+  readonly copyrightYear = new Date().getFullYear();
   readonly activeTab = signal<TabId>('inicio');
 
   readonly tabs: { id: TabId; label: string }[] = [
@@ -41,7 +42,7 @@ export class CvPageComponent {
   }
 
   val(e: Event): string {
-    return (e.target as HTMLInputElement).value;
+    return (e.target as HTMLInputElement | HTMLTextAreaElement).value;
   }
 
   checked(e: Event): boolean {

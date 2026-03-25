@@ -1,310 +1,433 @@
-<div class="page">
-  <header class="header">
-    <h1 class="title">Meu currículo</h1>
-    <p class="subtitle">Preencha e envie para quem vai montar o CV</p>
+<div class="page d-flex flex-column min-vh-100">
+  <header class="cv-header border-bottom border-light-subtle bg-white shadow-sm">
+    <div class="container py-3 py-md-4">
+      <div class="d-flex align-items-start gap-3">
+        <img
+          class="cv-header__logo flex-shrink-0 rounded-3 shadow-sm"
+          src="/logo.svg"
+          width="52"
+          height="52"
+          alt=""
+        />
+        <div class="min-w-0">
+          <p class="text-primary small fw-bold text-uppercase letter-spacing mb-1">yCu</p>
+          <h1 class="h4 fw-bold text-dark mb-1 mb-md-2">Meu currículo</h1>
+          <p class="text-body-secondary small mb-0">
+            Preencha e envie para quem vai montar o CV
+          </p>
+        </div>
+      </div>
+    </div>
   </header>
 
-  <nav class="tabs" aria-label="Seções">
-    @for (t of tabs; track t.id) {
-      <button
-        type="button"
-        class="tab"
-        [class.tab--active]="activeTab() === t.id"
-        (click)="setTab(t.id)"
-      >
-        {{ t.label }}
-      </button>
-    }
+  <nav class="cv-tabs-wrap bg-white border-bottom sticky-top shadow-sm" aria-label="Seções">
+    <div class="container">
+      <ul class="nav nav-pills flex-nowrap gap-2 py-3 cv-tabs-scroll" role="tablist">
+        @for (t of tabs; track t.id) {
+          <li class="nav-item flex-shrink-0" role="presentation">
+            <button
+              type="button"
+              class="nav-link rounded-pill px-3 py-2 small fw-semibold"
+              [class.active]="activeTab() === t.id"
+              [attr.aria-selected]="activeTab() === t.id"
+              [attr.aria-current]="activeTab() === t.id ? 'page' : null"
+              (click)="setTab(t.id)"
+            >
+              {{ t.label }}
+            </button>
+          </li>
+        }
+      </ul>
+    </div>
   </nav>
 
-  <main class="content">
-    @if (activeTab() === 'inicio') {
-      <section class="card">
-        <h2 class="card-title">Como usar</h2>
-        <p class="body">
-          1. Vá preenchendo cada aba: dados pessoais, objetivo, formação, experiência e extras.<br /><br />
-          2. Os dados ficam salvos automaticamente neste navegador.<br /><br />
-          3. Na aba Enviar, use Compartilhar ou Copiar para mandar tudo para quem vai fazer o currículo (por exemplo no
-          WhatsApp).
-        </p>
-        <button type="button" class="btn btn-secondary" (click)="setTab('pessoal')">Começar pelos dados pessoais</button>
-      </section>
-    }
-
-    @if (activeTab() === 'pessoal') {
-      <section class="card">
-        <h2 class="card-title">Dados pessoais</h2>
-        <label class="field">
-          <span class="label">Nome completo</span>
-          <input
-            class="input"
-            type="text"
-            [value]="storage.cv().personal.fullName"
-            (input)="patchPersonal({ fullName: val($event) })"
-            placeholder="Como quer no currículo"
-          />
-        </label>
-        <label class="field">
-          <span class="label">E-mail</span>
-          <input
-            class="input"
-            type="email"
-            [value]="storage.cv().personal.email"
-            (input)="patchPersonal({ email: val($event) })"
-            placeholder="seu@email.com"
-          />
-        </label>
-        <label class="field">
-          <span class="label">Telefone / WhatsApp</span>
-          <input
-            class="input"
-            type="tel"
-            [value]="storage.cv().personal.phone"
-            (input)="patchPersonal({ phone: val($event) })"
-            placeholder="(00) 00000-0000"
-          />
-        </label>
-        <label class="field">
-          <span class="label">Cidade / UF</span>
-          <input
-            class="input"
-            type="text"
-            [value]="storage.cv().personal.cityState"
-            (input)="patchPersonal({ cityState: val($event) })"
-            placeholder="Ex.: São Paulo — SP"
-          />
-        </label>
-        <label class="field">
-          <span class="label">LinkedIn (opcional)</span>
-          <input
-            class="input"
-            type="url"
-            [value]="storage.cv().personal.linkedin"
-            (input)="patchPersonal({ linkedin: val($event) })"
-            placeholder="URL do perfil"
-          />
-        </label>
-        <label class="field">
-          <span class="label">Portfólio ou site (opcional)</span>
-          <input
-            class="input"
-            type="url"
-            [value]="storage.cv().personal.portfolio"
-            (input)="patchPersonal({ portfolio: val($event) })"
-            placeholder="https://"
-          />
-        </label>
-      </section>
-    }
-
-    @if (activeTab() === 'objetivo') {
-      <section class="card">
-        <h2 class="card-title">Objetivo ou resumo</h2>
-        <p class="hint">O que você busca e/ou um parágrafo sobre sua trajetória.</p>
-        <label class="field">
-          <textarea
-            class="input input-multiline"
-            rows="6"
-            [value]="storage.cv().objective"
-            (input)="setObjective(val($event))"
-            placeholder="Ex.: Busco oportunidade como… Tenho X anos de experiência em…"
-          ></textarea>
-        </label>
-      </section>
-    }
-
-    @if (activeTab() === 'formacao') {
-      <section class="card">
-        <h2 class="card-title">Formação acadêmica</h2>
-        <p class="hint">Adicione cada curso ou nível de ensino.</p>
-        @for (ed of storage.cv().education; track ed.id; let i = $index) {
-          <div class="sub-card">
-            <div class="sub-card-head">
-              <span class="sub-card-title">Formação {{ i + 1 }}</span>
-              <button type="button" class="link-danger" (click)="removeEducation(ed.id)">Remover</button>
-            </div>
-            <label class="field">
-              <span class="label">Instituição</span>
-              <input
-                class="input"
-                type="text"
-                [value]="ed.institution"
-                (input)="patchEd(ed.id, { institution: val($event) })"
-                placeholder="Nome da escola/faculdade"
-              />
-            </label>
-            <label class="field">
-              <span class="label">Curso</span>
-              <input class="input" type="text" [value]="ed.course" (input)="patchEd(ed.id, { course: val($event) })" />
-            </label>
-            <label class="field">
-              <span class="label">Grau (Ex.: Técnico, Superior, Mestrado)</span>
-              <input class="input" type="text" [value]="ed.degree" (input)="patchEd(ed.id, { degree: val($event) })" />
-            </label>
-            <div class="row2">
-              <label class="field row2-item">
-                <span class="label">Início (ano)</span>
-                <input
-                  class="input"
-                  type="text"
-                  [value]="ed.startYear"
-                  (input)="patchEd(ed.id, { startYear: val($event) })"
-                  placeholder="2018"
-                />
-              </label>
-              <label class="field row2-item">
-                <span class="label">Fim (ano)</span>
-                <input
-                  class="input"
-                  type="text"
-                  [value]="ed.endYear"
-                  (input)="patchEd(ed.id, { endYear: val($event) })"
-                  placeholder="2022"
-                />
-              </label>
-            </div>
-            <label class="field">
-              <span class="label">Situação (Ex.: Completo, Cursando)</span>
-              <input class="input" type="text" [value]="ed.status" (input)="patchEd(ed.id, { status: val($event) })" />
-            </label>
+  <main class="flex-grow-1 py-4">
+    <div class="container" style="max-width: 720px">
+      @if (activeTab() === 'inicio') {
+        <section class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h2 class="card-title h5 fw-bold mb-3">Como usar</h2>
+            <ol class="list-group list-group-numbered list-group-flush rounded-3 mb-4 border">
+              <li class="list-group-item px-3 py-3">
+                Vá preenchendo cada aba: dados pessoais, objetivo, formação, experiência e extras.
+              </li>
+              <li class="list-group-item px-3 py-3">
+                Os dados ficam salvos automaticamente neste navegador.
+              </li>
+              <li class="list-group-item px-3 py-3">
+                Na aba Enviar, use Compartilhar ou Copiar para mandar tudo para quem vai fazer o currículo (por exemplo
+                no WhatsApp).
+              </li>
+            </ol>
+            <button type="button" class="btn btn-primary w-100" (click)="setTab('pessoal')">
+              Começar pelos dados pessoais
+            </button>
           </div>
-        }
-        <button type="button" class="btn btn-secondary" (click)="addEducation()">+ Adicionar formação</button>
-      </section>
-    }
+        </section>
+      }
 
-    @if (activeTab() === 'experiencia') {
-      <section class="card">
-        <h2 class="card-title">Experiência profissional</h2>
-        <p class="hint">Do mais recente para o mais antigo, se possível.</p>
-        @for (ex of storage.cv().experience; track ex.id; let i = $index) {
-          <div class="sub-card">
-            <div class="sub-card-head">
-              <span class="sub-card-title">Experiência {{ i + 1 }}</span>
-              <button type="button" class="link-danger" (click)="removeExperience(ex.id)">Remover</button>
-            </div>
-            <label class="field">
-              <span class="label">Empresa</span>
+      @if (activeTab() === 'pessoal') {
+        <section class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h2 class="card-title h5 fw-bold mb-1">Dados pessoais</h2>
+            <p class="text-body-secondary small mb-4">Informações de contato e links profissionais.</p>
+            <div class="mb-3">
+              <label class="form-label fw-semibold small" for="pf-name">Nome completo</label>
               <input
-                class="input"
+                id="pf-name"
+                class="form-control"
                 type="text"
-                [value]="ex.company"
-                (input)="patchEx(ex.id, { company: val($event) })"
+                [value]="storage.cv().personal.fullName"
+                (input)="patchPersonal({ fullName: val($event) })"
+                placeholder="Como quer no currículo"
               />
-            </label>
-            <label class="field">
-              <span class="label">Cargo</span>
-              <input class="input" type="text" [value]="ex.role" (input)="patchEx(ex.id, { role: val($event) })" />
-            </label>
-            <label class="field row-switch">
-              <span class="label">Trabalho atual</span>
-              <input
-                type="checkbox"
-                [checked]="ex.current"
-                (change)="patchEx(ex.id, { current: checked($event), endDate: checked($event) ? '' : ex.endDate })"
-              />
-            </label>
-            <div class="row2">
-              <label class="field row2-item">
-                <span class="label">Início</span>
-                <input
-                  class="input"
-                  type="text"
-                  [value]="ex.startDate"
-                  (input)="patchEx(ex.id, { startDate: val($event) })"
-                  placeholder="mm/aaaa ou ano"
-                />
-              </label>
-              @if (!ex.current) {
-                <label class="field row2-item">
-                  <span class="label">Fim</span>
-                  <input
-                    class="input"
-                    type="text"
-                    [value]="ex.endDate"
-                    (input)="patchEx(ex.id, { endDate: val($event) })"
-                    placeholder="mm/aaaa ou ano"
-                  />
-                </label>
-              }
             </div>
-            <label class="field">
-              <span class="label">Atividades e conquistas</span>
+            <div class="mb-3">
+              <label class="form-label fw-semibold small" for="pf-email">E-mail</label>
+              <input
+                id="pf-email"
+                class="form-control"
+                type="email"
+                [value]="storage.cv().personal.email"
+                (input)="patchPersonal({ email: val($event) })"
+                placeholder="seu@email.com"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold small" for="pf-phone">Telefone / WhatsApp</label>
+              <input
+                id="pf-phone"
+                class="form-control"
+                type="tel"
+                [value]="storage.cv().personal.phone"
+                (input)="patchPersonal({ phone: val($event) })"
+                placeholder="(00) 00000-0000"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold small" for="pf-city">Cidade / UF</label>
+              <input
+                id="pf-city"
+                class="form-control"
+                type="text"
+                [value]="storage.cv().personal.cityState"
+                (input)="patchPersonal({ cityState: val($event) })"
+                placeholder="Ex.: São Paulo — SP"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold small" for="pf-li">LinkedIn <span class="fw-normal text-muted">(opcional)</span></label>
+              <input
+                id="pf-li"
+                class="form-control"
+                type="url"
+                [value]="storage.cv().personal.linkedin"
+                (input)="patchPersonal({ linkedin: val($event) })"
+                placeholder="URL do perfil"
+              />
+            </div>
+            <div class="mb-0">
+              <label class="form-label fw-semibold small" for="pf-port">Portfólio ou site <span class="fw-normal text-muted">(opcional)</span></label>
+              <input
+                id="pf-port"
+                class="form-control"
+                type="url"
+                [value]="storage.cv().personal.portfolio"
+                (input)="patchPersonal({ portfolio: val($event) })"
+                placeholder="https://"
+              />
+            </div>
+          </div>
+        </section>
+      }
+
+      @if (activeTab() === 'objetivo') {
+        <section class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h2 class="card-title h5 fw-bold mb-1">Objetivo ou resumo</h2>
+            <p class="form-text mb-3">O que você busca e/ou um parágrafo sobre sua trajetória.</p>
+            <label class="form-label visually-hidden" for="obj-text">Objetivo</label>
+            <textarea
+              id="obj-text"
+              class="form-control"
+              rows="6"
+              [value]="storage.cv().objective"
+              (input)="setObjective(val($event))"
+              placeholder="Ex.: Busco oportunidade como… Tenho X anos de experiência em…"
+            ></textarea>
+          </div>
+        </section>
+      }
+
+      @if (activeTab() === 'formacao') {
+        <section class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h2 class="card-title h5 fw-bold mb-1">Formação acadêmica</h2>
+            <p class="form-text mb-4">Adicione cada curso ou nível de ensino.</p>
+            @for (ed of storage.cv().education; track ed.id; let i = $index) {
+              <div class="card bg-light border mb-3">
+                <div class="card-body p-3">
+                  <div class="d-flex justify-content-between align-items-center mb-3 gap-2">
+                    <span class="fw-semibold small text-dark">Formação {{ i + 1 }}</span>
+                    <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeEducation(ed.id)">
+                      Remover
+                    </button>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small fw-semibold" [attr.for]="'ed-inst-' + ed.id">Instituição</label>
+                    <input
+                      [id]="'ed-inst-' + ed.id"
+                      class="form-control form-control-sm"
+                      type="text"
+                      [value]="ed.institution"
+                      (input)="patchEd(ed.id, { institution: val($event) })"
+                      placeholder="Nome da escola/faculdade"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small fw-semibold" [attr.for]="'ed-course-' + ed.id">Curso</label>
+                    <input
+                      [id]="'ed-course-' + ed.id"
+                      class="form-control form-control-sm"
+                      type="text"
+                      [value]="ed.course"
+                      (input)="patchEd(ed.id, { course: val($event) })"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small fw-semibold" [attr.for]="'ed-degree-' + ed.id">Grau</label>
+                    <input
+                      [id]="'ed-degree-' + ed.id"
+                      class="form-control form-control-sm"
+                      type="text"
+                      [value]="ed.degree"
+                      (input)="patchEd(ed.id, { degree: val($event) })"
+                      placeholder="Ex.: Técnico, Superior, Mestrado"
+                    />
+                  </div>
+                  <div class="row g-2 mb-3">
+                    <div class="col-sm-6">
+                      <label class="form-label small fw-semibold" [attr.for]="'ed-start-' + ed.id">Início (ano)</label>
+                      <input
+                        [id]="'ed-start-' + ed.id"
+                        class="form-control form-control-sm"
+                        type="text"
+                        [value]="ed.startYear"
+                        (input)="patchEd(ed.id, { startYear: val($event) })"
+                        placeholder="2018"
+                      />
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label small fw-semibold" [attr.for]="'ed-end-' + ed.id">Fim (ano)</label>
+                      <input
+                        [id]="'ed-end-' + ed.id"
+                        class="form-control form-control-sm"
+                        type="text"
+                        [value]="ed.endYear"
+                        (input)="patchEd(ed.id, { endYear: val($event) })"
+                        placeholder="2022"
+                      />
+                    </div>
+                  </div>
+                  <div class="mb-0">
+                    <label class="form-label small fw-semibold" [attr.for]="'ed-status-' + ed.id">Situação</label>
+                    <input
+                      [id]="'ed-status-' + ed.id"
+                      class="form-control form-control-sm"
+                      type="text"
+                      [value]="ed.status"
+                      (input)="patchEd(ed.id, { status: val($event) })"
+                      placeholder="Ex.: Completo, Cursando"
+                    />
+                  </div>
+                </div>
+              </div>
+            }
+            <button type="button" class="btn btn-outline-primary w-100" (click)="addEducation()">
+              + Adicionar formação
+            </button>
+          </div>
+        </section>
+      }
+
+      @if (activeTab() === 'experiencia') {
+        <section class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h2 class="card-title h5 fw-bold mb-1">Experiência profissional</h2>
+            <p class="form-text mb-4">Do mais recente para o mais antigo, se possível.</p>
+            @for (ex of storage.cv().experience; track ex.id; let i = $index) {
+              <div class="card bg-light border mb-3">
+                <div class="card-body p-3">
+                  <div class="d-flex justify-content-between align-items-center mb-3 gap-2">
+                    <span class="fw-semibold small text-dark">Experiência {{ i + 1 }}</span>
+                    <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeExperience(ex.id)">
+                      Remover
+                    </button>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small fw-semibold" [attr.for]="'ex-co-' + ex.id">Empresa</label>
+                    <input
+                      [id]="'ex-co-' + ex.id"
+                      class="form-control form-control-sm"
+                      type="text"
+                      [value]="ex.company"
+                      (input)="patchEx(ex.id, { company: val($event) })"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small fw-semibold" [attr.for]="'ex-role-' + ex.id">Cargo</label>
+                    <input
+                      [id]="'ex-role-' + ex.id"
+                      class="form-control form-control-sm"
+                      type="text"
+                      [value]="ex.role"
+                      (input)="patchEx(ex.id, { role: val($event) })"
+                    />
+                  </div>
+                  <div class="form-check form-switch mb-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      [id]="'ex-current-' + ex.id"
+                      [checked]="ex.current"
+                      (change)="patchEx(ex.id, { current: checked($event), endDate: checked($event) ? '' : ex.endDate })"
+                    />
+                    <label class="form-check-label small" [attr.for]="'ex-current-' + ex.id">Trabalho atual</label>
+                  </div>
+                  <div class="row g-2 mb-3">
+                    <div class="col-sm-6">
+                      <label class="form-label small fw-semibold" [attr.for]="'ex-start-' + ex.id">Início</label>
+                      <input
+                        [id]="'ex-start-' + ex.id"
+                        class="form-control form-control-sm"
+                        type="text"
+                        [value]="ex.startDate"
+                        (input)="patchEx(ex.id, { startDate: val($event) })"
+                        placeholder="mm/aaaa ou ano"
+                      />
+                    </div>
+                    @if (!ex.current) {
+                      <div class="col-sm-6">
+                        <label class="form-label small fw-semibold" [attr.for]="'ex-end-' + ex.id">Fim</label>
+                        <input
+                          [id]="'ex-end-' + ex.id"
+                          class="form-control form-control-sm"
+                          type="text"
+                          [value]="ex.endDate"
+                          (input)="patchEx(ex.id, { endDate: val($event) })"
+                          placeholder="mm/aaaa ou ano"
+                        />
+                      </div>
+                    }
+                  </div>
+                  <div class="mb-0">
+                    <label class="form-label small fw-semibold" [attr.for]="'ex-desc-' + ex.id">Atividades e conquistas</label>
+                    <textarea
+                      [id]="'ex-desc-' + ex.id"
+                      class="form-control form-control-sm"
+                      rows="5"
+                      [value]="ex.description"
+                      (input)="patchEx(ex.id, { description: val($event) })"
+                      placeholder="Liste responsabilidades e resultados quando possível."
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            }
+            <button type="button" class="btn btn-outline-primary w-100" (click)="addExperience()">
+              + Adicionar experiência
+            </button>
+          </div>
+        </section>
+      }
+
+      @if (activeTab() === 'complementos') {
+        <section class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h2 class="card-title h5 fw-bold mb-1">Habilidades, idiomas e outros</h2>
+            <p class="form-text mb-4">Um item por linha ou separado por vírgula — como preferir.</p>
+            <div class="mb-3">
+              <label class="form-label fw-semibold small" for="sk">Habilidades / competências</label>
               <textarea
-                class="input input-multiline"
-                rows="5"
-                [value]="ex.description"
-                (input)="patchEx(ex.id, { description: val($event) })"
-                placeholder="Liste responsabilidades e resultados quando possível."
+                id="sk"
+                class="form-control"
+                rows="4"
+                [value]="storage.cv().skills"
+                (input)="setSkills(val($event))"
+                placeholder="Ex.: Excel avançado, atendimento ao cliente, Python…"
               ></textarea>
-            </label>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold small" for="lang">Idiomas</label>
+              <textarea
+                id="lang"
+                class="form-control"
+                rows="3"
+                [value]="storage.cv().languages"
+                (input)="setLanguages(val($event))"
+                placeholder="Ex.: Inglês — intermediário"
+              ></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold small" for="courses">Cursos e treinamentos</label>
+              <textarea
+                id="courses"
+                class="form-control"
+                rows="4"
+                [value]="storage.cv().courses"
+                (input)="setCourses(val($event))"
+              ></textarea>
+            </div>
+            <div class="mb-0">
+              <label class="form-label fw-semibold small" for="cert">Certificações</label>
+              <textarea
+                id="cert"
+                class="form-control"
+                rows="3"
+                [value]="storage.cv().certifications"
+                (input)="setCertifications(val($event))"
+              ></textarea>
+            </div>
           </div>
-        }
-        <button type="button" class="btn btn-secondary" (click)="addExperience()">+ Adicionar experiência</button>
-      </section>
-    }
+        </section>
+      }
 
-    @if (activeTab() === 'complementos') {
-      <section class="card">
-        <h2 class="card-title">Habilidades, idiomas e outros</h2>
-        <p class="hint">Um item por linha ou separado por vírgula — como preferir.</p>
-        <label class="field">
-          <span class="label">Habilidades / competências</span>
-          <textarea
-            class="input input-multiline"
-            rows="4"
-            [value]="storage.cv().skills"
-            (input)="setSkills(val($event))"
-            placeholder="Ex.: Excel avançado, atendimento ao cliente, Python…"
-          ></textarea>
-        </label>
-        <label class="field">
-          <span class="label">Idiomas</span>
-          <textarea
-            class="input input-multiline"
-            rows="3"
-            [value]="storage.cv().languages"
-            (input)="setLanguages(val($event))"
-            placeholder="Ex.: Inglês — intermediário"
-          ></textarea>
-        </label>
-        <label class="field">
-          <span class="label">Cursos e treinamentos</span>
-          <textarea
-            class="input input-multiline"
-            rows="4"
-            [value]="storage.cv().courses"
-            (input)="setCourses(val($event))"
-          ></textarea>
-        </label>
-        <label class="field">
-          <span class="label">Certificações</span>
-          <textarea
-            class="input input-multiline"
-            rows="3"
-            [value]="storage.cv().certifications"
-            (input)="setCertifications(val($event))"
-          ></textarea>
-        </label>
-      </section>
-    }
-
-    @if (activeTab() === 'enviar') {
-      <section class="card">
-        <h2 class="card-title">Enviar dados</h2>
-        <p class="body">
-          Use uma das opções abaixo para mandar as informações para quem vai montar o currículo (WhatsApp, e-mail, etc.).
-        </p>
-        <button type="button" class="btn btn-primary" (click)="shareText()">Compartilhar texto</button>
-        <button type="button" class="btn btn-secondary btn-spaced" (click)="copyText()">Copiar texto formatado</button>
-        <button type="button" class="btn btn-secondary btn-spaced" (click)="copyJson()">Copiar JSON (avançado)</button>
-        <hr class="divider" />
-        <p class="preview-label">Pré-visualização</p>
-        <pre class="preview-box" tabindex="0">{{ textExport() || '(Preencha as abas anteriores — o texto aparecerá aqui.)' }}</pre>
-        <button type="button" class="btn btn-danger btn-spaced" (click)="confirmReset()">Limpar todos os dados</button>
-      </section>
-    }
-
-    <div class="footer-spacer" aria-hidden="true"></div>
+      @if (activeTab() === 'enviar') {
+        <section class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h2 class="card-title h5 fw-bold mb-3">Enviar dados</h2>
+            <p class="text-body-secondary small mb-4">
+              Use uma das opções abaixo para mandar as informações para quem vai montar o currículo (WhatsApp, e-mail,
+              etc.).
+            </p>
+            <div class="d-grid gap-2">
+              <button type="button" class="btn btn-primary" (click)="shareText()">Compartilhar texto</button>
+              <button type="button" class="btn btn-outline-primary" (click)="copyText()">Copiar texto formatado</button>
+              <button type="button" class="btn btn-outline-secondary" (click)="copyJson()">Copiar JSON (avançado)</button>
+            </div>
+            <hr class="my-4 text-secondary" />
+            <label class="form-label fw-semibold small" for="preview-export">Pré-visualização</label>
+            <pre
+              id="preview-export"
+              class="cv-preview font-monospace mb-4"
+              tabindex="0"
+            >{{ textExport() || '(Preencha as abas anteriores — o texto aparecerá aqui.)' }}</pre>
+            <button type="button" class="btn btn-outline-danger w-100" (click)="confirmReset()">
+              Limpar todos os dados
+            </button>
+          </div>
+        </section>
+      }
+    </div>
   </main>
+
+  <footer class="cv-footer border-top bg-white mt-auto">
+    <div class="container py-4 text-center" style="max-width: 720px">
+      <p class="small fw-semibold text-body-secondary mb-1">Criador: Wellysson Nascimento Rocha</p>
+      <p class="small text-muted mb-0">
+        © {{ copyrightYear }} Wellysson Nascimento Rocha. Todos os direitos reservados.
+      </p>
+    </div>
+  </footer>
 </div>

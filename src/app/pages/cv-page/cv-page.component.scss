@@ -1,227 +1,57 @@
 .page {
-  min-height: 100vh;
-  background: #f6f4f1;
-  color: #1c1917;
+  background: linear-gradient(165deg, #f8fafc 0%, #f1f5f9 42%, #e2e8f0 100%);
+  color: var(--bs-body-color);
 }
 
-.header {
-  padding: 1rem 1.25rem 0.5rem;
+.cv-header__logo {
+  width: 52px;
+  height: 52px;
 }
 
-.title {
-  margin: 0;
-  font-size: 1.375rem;
-  font-weight: 700;
+.letter-spacing {
+  letter-spacing: 0.08em;
 }
 
-.subtitle {
-  margin: 0.35rem 0 0;
-  font-size: 0.875rem;
-  color: #57534e;
-}
-
-.tabs {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 0.5rem;
+.cv-tabs-scroll {
   overflow-x: auto;
-  padding: 0.5rem 0.75rem 0.75rem;
-  -webkit-overflow-scrolling: touch;
+  overflow-y: hidden;
   scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--bs-border-color);
+    border-radius: 4px;
+  }
 }
 
-.tab {
-  flex: 0 0 auto;
-  border: none;
-  border-radius: 999px;
-  padding: 0.5rem 0.875rem;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  background: #d6d3d1;
-  color: #1c1917;
-  cursor: pointer;
-  font-family: inherit;
+.cv-tabs-scroll .nav-link:not(.active) {
+  background-color: var(--bs-secondary-bg);
+  color: var(--bs-body-color);
 }
 
-.tab--active {
-  background: #0c4a6e;
-  color: #fff;
+.cv-tabs-scroll .nav-link:not(.active):hover {
+  background-color: var(--bs-tertiary-bg);
 }
 
-.content {
-  padding: 0 1rem 1.5rem;
-  max-width: 720px;
-  margin: 0 auto;
-}
-
-.card {
-  background: #fff;
-  border: 1px solid #e7e5e4;
-  border-radius: 12px;
-  padding: 1rem;
-}
-
-.card-title {
-  margin: 0 0 0.5rem;
-  font-size: 1.125rem;
-  font-weight: 700;
-}
-
-.body {
-  margin: 0 0 1rem;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-
-.hint {
-  margin: 0 0 0.75rem;
-  font-size: 0.8125rem;
-  color: #57534e;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  margin-bottom: 0.875rem;
-}
-
-.label {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #57534e;
-}
-
-.input {
-  border: 1px solid #e7e5e4;
-  border-radius: 8px;
-  padding: 0.625rem 0.75rem;
-  font-size: 1rem;
-  font-family: inherit;
-  color: #1c1917;
-  background: #f6f4f1;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.input-multiline {
-  min-height: 7rem;
-  resize: vertical;
-}
-
-.input:focus {
-  outline: 2px solid #0c4a6e;
-  outline-offset: 1px;
-}
-
-.sub-card {
-  border: 1px solid #e7e5e4;
-  border-radius: 10px;
-  padding: 0.75rem;
-  margin-bottom: 0.75rem;
-  background: #f6f4f1;
-}
-
-.sub-card-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.sub-card-title {
-  font-weight: 700;
-  font-size: 0.9375rem;
-}
-
-.link-danger {
-  border: none;
-  background: none;
-  color: #b91c1c;
-  font-weight: 600;
-  font-size: 0.875rem;
-  cursor: pointer;
-  font-family: inherit;
-  padding: 0.25rem;
-}
-
-.row2 {
-  display: flex;
-  gap: 0.625rem;
-}
-
-.row2-item {
-  flex: 1;
-  min-width: 0;
-}
-
-.row-switch {
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.btn {
-  display: block;
-  width: 100%;
-  border: none;
-  border-radius: 10px;
-  padding: 0.875rem;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  font-family: inherit;
-  cursor: pointer;
-  text-align: center;
-}
-
-.btn-primary {
-  background: #0c4a6e;
-  color: #fff;
-}
-
-.btn-secondary {
-  background: transparent;
-  color: #0c4a6e;
-  border: 2px solid #0c4a6e;
-}
-
-.btn-danger {
-  background: #b91c1c;
-  color: #fff;
-}
-
-.btn-spaced {
-  margin-top: 0.625rem;
-}
-
-.divider {
-  border: none;
-  border-top: 1px solid #e7e5e4;
-  margin: 1.25rem 0;
-}
-
-.preview-label {
-  margin: 0 0 0.5rem;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #57534e;
-}
-
-.preview-box {
+.cv-preview {
   margin: 0;
-  font-size: 0.8125rem;
-  line-height: 1.45;
+  max-height: 240px;
+  overflow: auto;
   white-space: pre-wrap;
   word-break: break-word;
-  background: #f6f4f1;
-  border: 1px solid #e7e5e4;
-  border-radius: 8px;
-  padding: 0.75rem;
-  max-height: 220px;
-  overflow: auto;
-  font-family: inherit;
+  line-height: 1.5;
+  padding: 1rem;
+  font-size: 0.8125rem;
+  color: var(--bs-body-color);
+  background-color: var(--bs-tertiary-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
 }
 
-.footer-spacer {
-  height: 2rem;
+.cv-footer {
+  box-shadow: 0 -4px 24px rgba(15, 23, 42, 0.04);
 }

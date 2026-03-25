@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-labelledby="logoTitle">
+  <title id="logoTitle">yCu curriculum</title>
+  <defs>
+    <linearGradient id="ycu-bg" x1="8" y1="4" x2="56" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0e7490"/>
+      <stop offset="1" stop-color="#0c4a6e"/>
+    </linearGradient>
+    <linearGradient id="ycu-fold" x1="38" y1="10" x2="54" y2="26" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#cbd5e1"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#ycu-bg)"/>
+  <path fill="#fff" d="M18 12h20l10 10v32H18V12z"/>
+  <path fill="url(#ycu-fold)" d="M38 12v10h10L38 12z"/>
+  <rect x="24" y="26" width="20" height="3" rx="1.5" fill="#0c4a6e" opacity=".2"/>
+  <rect x="24" y="32" width="14" height="3" rx="1.5" fill="#0c4a6e" opacity=".2"/>
+  <rect x="24" y="38" width="17" height="3" rx="1.5" fill="#0c4a6e" opacity=".2"/>
+  <rect x="24" y="44" width="12" height="3" rx="1.5" fill="#0c4a6e" opacity=".2"/>
+  <path
+    fill="none"
+    stroke="#0c4a6e"
+    stroke-width="2.2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    d="M27.5 14 31.5 19 35.5 14M31.5 19v5.5"
+  />
+  <path
+    stroke="#5eead4"
+    stroke-width="2.4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    d="M41 45.5 44.2 49 50.5 40.5"
+  />
+</svg>

@@ -1,10 +1,19 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+:root {
+  --bs-primary: #0c4a6e;
+  --bs-primary-rgb: 12, 74, 110;
+  --bs-link-color: #0c4a6e;
+  --bs-link-hover-color: #073652;
+  --bs-focus-ring-color: rgba(12, 74, 110, 0.35);
 }
 
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    Ubuntu,
+    Cantarell,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
