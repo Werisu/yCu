@@ -1,3 +1,4 @@
+/** Local: preencha aqui. Produção (Vercel): use SUPABASE_URL e SUPABASE_ANON_KEY no painel do deploy. */
 export const environment = {
   production: false,
   /** URL do projeto (Settings → API no painel Supabase) */
